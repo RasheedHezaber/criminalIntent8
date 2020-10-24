@@ -25,6 +25,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Wed 20:20 11/12/2020"></Button>
+    <Button
+        android:id="@+id/crime_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Wed 20:20 11/12/2020"></Button>
     <CheckBox
         android:id="@+id/crime_solved"
         android:layout_width="wrap_content"
