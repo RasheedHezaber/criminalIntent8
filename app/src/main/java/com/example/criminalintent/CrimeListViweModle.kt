@@ -21,4 +21,8 @@ class CrimeListViweModle: ViewModel() {
         }*/
 
   val  crimeListLiveData = CrimeRepository.get().getCrimes()
+  fun addCrime(crime:Crime){
+    CrimeRepository.get().addCrime(crime)
+
+  }
     }

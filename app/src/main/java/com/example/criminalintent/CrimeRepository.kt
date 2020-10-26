@@ -27,6 +27,9 @@ executor.execute{
     crimeDao.updateCrime(crime)
 }
     }
+ fun  addCrime(crime:Crime){
+     executor.execute { crimeDao.addCrime(crime) }
+ }
     companion object {
         private var INSTANCE: CrimeRepository? = null
         fun initialize(context: Context) {

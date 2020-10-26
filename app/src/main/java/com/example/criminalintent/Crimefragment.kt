@@ -3,9 +3,7 @@ package com.example.criminalintent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -136,6 +134,11 @@ companion object{
     override fun onTimeSelected(date: Date) {
         crime.date=date
         updateUI()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_crime_list,menu)
     }
 }
 
