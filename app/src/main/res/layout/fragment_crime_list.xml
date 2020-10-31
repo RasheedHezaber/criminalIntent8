@@ -17,12 +17,14 @@
         android:layout_width="96dp"
         android:layout_height="35dp"
         android:text="no data"
+        android:visibility="gone"
         />
 
     <Button
             android:id="@+id/addCrimeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+        android:visibility="gone"
             android:text="add crime" />
 
 </LinearLayout>

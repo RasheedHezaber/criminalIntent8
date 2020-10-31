@@ -59,20 +59,13 @@ class CrimeListFragment : Fragment() {
 
      fun updateUI(crimes: List<Crime>) {
         //val crimes = crimeListViewModel.crimes
-   if (crimes.isNotEmpty()){
-       adapter = CrimeAdapter(crimes)
 
-       addCrimeText.visibility = View.GONE
-       addCrimeButton.visibility = View.GONE
-
-       crimeRecyclerView.adapter = adapter
-       val adapter = crimeRecyclerView.adapter as CrimeAdapter
-       adapter.submitList(crimes)
-   }else {
-
-       crimeRecyclerView.visibility = View.GONE
-
-   }
+         adapter?.let {
+             it.crimes = crimes
+         } ?: run {
+             adapter = CrimeAdapter(crimes)
+         }
+         crimeRecyclerView.adapter = adapter
 
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -178,6 +171,16 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun getItemCount(): Int {
+
+            if (crimes.size==0){
+                addCrimeText.visibility = View.VISIBLE
+                addCrimeButton.visibility = View.VISIBLE
+
+            }else {
+
+                addCrimeText.visibility = View.GONE
+                addCrimeButton.visibility = View.GONE
+            }
             return crimes.size
         }
 
