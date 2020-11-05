@@ -6,21 +6,17 @@ import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import database.CrimeDatabase
+import database.migration_1_2
+import database.migration_2_3
 import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "crime-database"
 class CrimeRepository private constructor(context:Context){
-    private val database : CrimeDatabase = Room.databaseBuilder(
-        context.applicationContext,
-        CrimeDatabase::class.java,
-        DATABASE_NAME
-    ).addMigrations(object : Migration(1,2){
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("ALTER TABLE Crime ADD COLUMN suspect TEXT NOT NULL DEFAULT ''")
-        }
-    }).build()
+    private val database: CrimeDatabase =
+        Room.databaseBuilder(context.applicationContext ,
+            CrimeDatabase::class.java , DATABASE_NAME).fallbackToDestructiveMigration().build()
     private val crimeDao = database.crimeDao()
     private val executor = Executors.newSingleThreadExecutor()
   //  fun getCrimes(): List<Crime> = crimeDao.getCrimes()

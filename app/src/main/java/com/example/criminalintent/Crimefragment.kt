@@ -24,6 +24,7 @@ private const val DIALOG_DATE = "DialogDate"
 private const val REQUEST_DATE = 0
 private const val DIALOG_TIME = "DialogTime"
 private const val DATE_FORMAT = "EEE, MMM, dd"
+
 class Crimefragment:Fragment(),DatePickerFragment.Callbacks,TimePickerFragment.TimeCallbacks{
      lateinit var crime: Crime
     lateinit var textFild:TextView
@@ -32,6 +33,7 @@ class Crimefragment:Fragment(),DatePickerFragment.Callbacks,TimePickerFragment.T
     lateinit var slovedCheckBox:CheckBox
     lateinit var suspectButton:Button
     private lateinit var reportButton: Button
+    private lateinit var crimeCallSuspect: Button
     private val crimeDetailViweModel:CrimeDetailViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeDetailViewModel::class.java)
     }
@@ -91,12 +93,21 @@ companion object{
                startActivity(chooserIntent)
             }}
         suspectButton = view.findViewById(R.id.crime_suspect) as Button
+        crimeCallSuspect = view.findViewById(R.id.crime_call) as Button
+        crimeCallSuspect.setOnClickListener {
+            val callContactIntent = Intent(Intent.ACTION_DIAL)
+            callContactIntent.data = Uri.parse("tel:${crime.suspectphone}")
+            startActivity(callContactIntent)
+        }
         suspectButton.apply {
             val pickContactIntent =
-                Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+                Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI).apply {
+                    type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
+                }
             setOnClickListener {
                 startActivityForResult(pickContactIntent, REQUEST_CONTACT)
             }
+
             val packageManager: PackageManager = requireActivity().packageManager
             val resolvedActivity: ResolveInfo? =
                 packageManager.resolveActivity(pickContactIntent,
@@ -134,7 +145,8 @@ companion object{
             resultCode != Activity.RESULT_OK -> return
             requestCode == REQUEST_CONTACT && data != null -> {
                 val contactUri: Uri? = data.data
-                val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
+                val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER)
+
                 val cursor = requireActivity().contentResolver
                     .query(contactUri!!, queryFields, null, null, null)
                 cursor?.use {
@@ -144,6 +156,7 @@ companion object{
                     }
                     it.moveToFirst()
                     val suspect = it.getString(0)
+                    crime.suspectphone = it.getString(1)
                     crime.suspect = suspect
                     crimeDetailViweModel.saveCrime(crime)
                     suspectButton.text = suspect
@@ -187,6 +200,7 @@ companion object{
        textFild.addTextChangedListener(titleWatcher)
 
     }
+
     override fun onStop() {
         super.onStop()
        crimeDetailViweModel.saveCrime(crime)
@@ -221,5 +235,6 @@ fun getCrimereport():String{
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.fragment_crime_list,menu)
     }
+
 }
 
